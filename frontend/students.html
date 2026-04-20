@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-section">
+    <h1>All Students</h1>
+    <p>Manage registered students.</p>
+</div>
+
+<div class="card bg-glass">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.student_id }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.course }}</td>
+                <td>
+                    <a href="{{ url_for('main.student_qrcode', id=student.id) }}" class="btn-primary" style="background-color: var(--success-color); padding: 0.3rem 0.6rem; font-size: 0.9rem; text-decoration: none;">QR</a>
+                    <a href="{{ url_for('main.edit_student', id=student.id) }}"  class="btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.9rem;">Edit</a>
+                    <form method="POST" action="{{ url_for('main.delete_student', id=student.id) }}" style="display: inline;">
+                        <button type="submit" class="btn-primary" style="background-color: var(--error-color); padding: 0.3rem 0.6rem; font-size: 0.9rem;" onclick="return confirm('Delete this student?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="text-center">No students found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

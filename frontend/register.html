@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-section">
+    <h1>Register New Student</h1>
+    <p>Add a student to the database and generate their unique QR code.</p>
+</div>
+
+<div class="main-split">
+    <div class="card bg-glass form-section">
+        {% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+        {% endif %}
+        {% if success %}
+        <div class="alert alert-success">{{ success }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('main.register') }}">
+            <div class="form-group">
+                <label for="student_id">Student ID</label>
+                <input type="text" id="student_id" name="student_id" required placeholder="e.g. 10012023">
+            </div>
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label for="course">Course/Major</label>
+                <input type="text" id="course" name="course" required placeholder="Computer Science">
+            </div>
+            <button type="submit" class="btn-primary full-width">Register Student</button>
+        </form>
+    </div>
+
+    <div class="card bg-glass qr-section">
+        {% if qr_code %}
+        <div class="qr-container">
+            <h3>QR Code for {{ name }}</h3>
+            <img src="data:image/png;base64,{{ qr_code }}" class="qr-image" alt="QR Code">
+            <p class="hint">Right-click and save this image or screenshot it.</p>
+        </div>
+        {% else %}
+        <div class="qr-placeholder">
+            <div class="placeholder-icon">📷</div>
+            <p>QR Code will appear here after registration.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
