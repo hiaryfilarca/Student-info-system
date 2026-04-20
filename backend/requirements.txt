@@ -1,6 +1,0 @@
-Flask==3.0.0
-Flask-SQLAlchemy
-PyMySQL
-cryptography==4.6.0
-qrcode==7.4.2
-Pillow==10.1.0
