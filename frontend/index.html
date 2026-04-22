@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="header-section" style="display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+        <h1>Daily Attendance</h1>
+        <p>Live attendance for <strong>{{ today.strftime('%A, %B %d, %Y') }}</strong></p>
+    </div>
+    {% set hour = now.hour %}
+    {% if now.weekday() >= 5 %}
+        <div class="alert alert-error" style="padding: 10px; margin: 0; display: inline-block;">🔴 Weekend: Offline</div>
+    {% elif 8 <= hour < 13 %}
+        <div class="alert alert-success" style="padding: 10px; margin: 0; display: inline-block;">🟢 Current Session: Morning</div>
+    {% elif 13 <= hour < 18 %}
+        <div class="alert alert-success" style="padding: 10px; margin: 0; display: inline-block;">🟢 Current Session: Afternoon</div>
+    {% else %}
+        <div class="alert alert-error" style="padding: 10px; margin: 0; display: inline-block;">🔴 Offline (Outside Hours)</div>
+    {% endif %}
+</div>
+
+<div class="card bg-glass">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Morning (8AM-12PM)</th>
+                <th>Afternoon (1PM-5PM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.student_id }}</td>
+                <td>{{ student.name }}</td>
+                
+                <td>
+                    {% if log_map.get(student.student_id, {}).get('Morning') %}
+                        <span style="color: var(--success-color); font-weight: bold;">Present</span>
+                    {% else %}
+                        {% if now.hour >= 13 or now.weekday() >= 5 %}
+                            <span style="color: var(--error-color); font-weight: bold;">Absent</span>
+                        {% else %}
+                            <span style="color: #94a3b8;">Pending...</span>
+                        {% endif %}
+                    {% endif %}
+                </td>
+                
+                <td>
+                    {% if log_map.get(student.student_id, {}).get('Afternoon') %}
+                        <span style="color: var(--success-color); font-weight: bold;">Present</span>
+                    {% else %}
+                        {% if now.hour >= 18 or now.weekday() >= 5 %}
+                            <span style="color: var(--error-color); font-weight: bold;">Absent</span>
+                        {% else %}
+                            <span style="color: #94a3b8;">Pending...</span>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="text-center">No students registered yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
